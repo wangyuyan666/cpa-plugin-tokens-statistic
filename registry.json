@@ -2,9 +2,9 @@
   "schema_version": 2,
   "plugins": [
     {
-      "id": "tokens-statistic",
-      "name": "Tokens Statistic (v8 compatibility)",
-      "description": "Token usage, cost, and latency dashboard. Pinned to the stable v0.3.11 release with updates sourced from wangyuyan666/cpa-plugin-tokens-statistic.",
+      "id": "tokens-statistic-fix",
+      "name": "Tokens Statistic Fix",
+      "description": "Token usage, cost, and latency dashboard. Uses the independent tokens-statistic-fix plugin ID and receives updates from wangyuyan666/cpa-plugin-tokens-statistic.",
       "author": "Pet-Max; v8 compatibility checks by wangyuyan666",
       "version": "0.3.11",
       "repository": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic",
@@ -18,44 +18,44 @@
           {
             "goos": "darwin",
             "goarch": "amd64",
-            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic_0.3.11_darwin_amd64.zip",
-            "sha256": "93dac5354eed81ddd47e53e100223115659b4d24c32698f469497bf3308cef3f",
-            "size": 3313721
+            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic-fix_0.3.11_darwin_amd64.zip",
+            "sha256": "d26c2ad74040eb7f4145e1475075458355745bf44639433f9daa2110aa46418d",
+            "size": 3304903
           },
           {
             "goos": "darwin",
             "goarch": "arm64",
-            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic_0.3.11_darwin_arm64.zip",
-            "sha256": "84ab2e8d4d5495ba1cb3f8a6777b8a3decf68b860c556732341e5996568120c5",
-            "size": 3060137
+            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic-fix_0.3.11_darwin_arm64.zip",
+            "sha256": "dda190822667a4c51a470a91ad134d604824fe9bab72309d0e0cfa63446166b3",
+            "size": 3050584
           },
           {
             "goos": "linux",
             "goarch": "amd64",
-            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic_0.3.11_linux_amd64.zip",
-            "sha256": "033df59f1416f21abf80f0cbd00e291e8c59ce1366f8f04ab5f9a41132418f45",
-            "size": 3487029
+            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic-fix_0.3.11_linux_amd64.zip",
+            "sha256": "b35db634463091f7e8d62dd1882690240970d571ff96a09b611885be807a8a90",
+            "size": 3477087
           },
           {
             "goos": "linux",
             "goarch": "arm64",
-            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic_0.3.11_linux_arm64.zip",
-            "sha256": "04c0c799548411f40fc5626ad6164caeda377d5522a0ff85cb7e51d00882559b",
-            "size": 3158243
+            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic-fix_0.3.11_linux_arm64.zip",
+            "sha256": "012b588e365f84c1819e2c7396a923a651bf068d6f6a04c236a8d83007363be3",
+            "size": 3150878
           },
           {
             "goos": "windows",
             "goarch": "amd64",
-            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic_0.3.11_windows_amd64.zip",
-            "sha256": "90bcbfe8b15e0c169c9cff1451d97359ead37bcb2c15f5005c2412983b3b24a3",
-            "size": 3454358
+            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic-fix_0.3.11_windows_amd64.zip",
+            "sha256": "12e9a4422a6364dd82901a489ae57dbe87c61ccae7674b2d0d6d97c778b4833c",
+            "size": 3385043
           },
           {
             "goos": "windows",
             "goarch": "arm64",
-            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic_0.3.11_windows_arm64.zip",
-            "sha256": "49ce09c7a713f3320a95634688a7931d47b85dabf08f49b4ccda2b361ae2c621",
-            "size": 3187816
+            "url": "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/download/v0.3.11/tokens-statistic-fix_0.3.11_windows_arm64.zip",
+            "sha256": "b5b60ea0148155ca52d0e262ec1661a29f3e1976e059e83a1b85e8b717a301ef",
+            "size": 3104283
           }
         ]
       }

@@ -8,12 +8,15 @@ import (
 
 func TestResolveDefaultDataPathFromPluginModule(t *testing.T) {
 	root := filepath.Join(t.TempDir(), "CLIProxyAPI")
-	modulePath := filepath.Join(root, "plugins", "darwin", "arm64", "tokens-statistic.dylib")
-
-	got := resolveDefaultDataPath(modulePath, "", "")
-	want := filepath.Join(root, "data", defaultDataFileName)
-	if got != want {
-		t.Fatalf("default data path = %q, want %q", got, want)
+	for _, filename := range []string{"tokens-statistic.dylib", "tokens-statistic-fix-v0.3.11.dylib"} {
+		t.Run(filename, func(t *testing.T) {
+			modulePath := filepath.Join(root, "plugins", "darwin", "arm64", filename)
+			got := resolveDefaultDataPath(modulePath, "", "")
+			want := filepath.Join(root, "data", "tokens-statistic.db")
+			if got != want {
+				t.Fatalf("default data path = %q, want %q", got, want)
+			}
+		})
 	}
 }
 

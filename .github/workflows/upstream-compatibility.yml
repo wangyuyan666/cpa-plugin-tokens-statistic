@@ -75,6 +75,6 @@ jobs:
         run: |
           set -euo pipefail
           CGO_ENABLED=1 go build -buildmode=c-shared -trimpath -buildvcs=false \
-            -o tokens-statistic.so .
+            -o tokens-statistic-fix.so .
           cc -O2 -Wall -Wextra -o abi-smoke scripts/abi-smoke.c -ldl
-          ./abi-smoke ./tokens-statistic.so
+          ./abi-smoke ./tokens-statistic-fix.so

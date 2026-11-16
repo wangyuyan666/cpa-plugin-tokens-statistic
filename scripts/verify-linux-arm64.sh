@@ -5,7 +5,7 @@ set -euo pipefail
 # symbols, and a runtime ABI smoke test (dlopen + plugin.register) under
 # qemu. Mirrors scripts/verify-darwin.sh.
 #
-# Usage: bash scripts/verify-linux-arm64.sh <tokens-statistic-v<version>.so>
+# Usage: bash scripts/verify-linux-arm64.sh <tokens-statistic-fix-v<version>.so>
 # The artifact may be passed as a bare name, a relative or an absolute path;
 # it is resolved to an absolute path below because dlopen treats slash-less
 # names as library sonames and never searches the current directory.

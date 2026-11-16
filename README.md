@@ -6,9 +6,9 @@
 
 <p align="center">
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-blue"></a>
-  <a href="https://github.com/Pet-Max/cpa-plugin-tokens-statistic/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Pet-Max/cpa-plugin-tokens-statistic?logo=github&label=Release"></a>
+  <a href="https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/wangyuyan666/cpa-plugin-tokens-statistic?logo=github&label=Release"></a>
   <a href="https://go.dev"><img alt="Go" src="https://img.shields.io/badge/Go-1.26%2B-00ADD8?logo=go&logoSize=auto&label=%E8%AF%AD%E8%A8%80"></a>
-  <a href="https://github.com/Pet-Max/cpa-plugin-tokens-statistic/releases/latest"><img alt="Platform" src="https://img.shields.io/badge/Platform-Linux%20%7C%20MacOS%20%7C%20Windows-lightgrey"></a>
+  <a href="https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/latest"><img alt="Platform" src="https://img.shields.io/badge/Platform-Linux%20%7C%20MacOS%20%7C%20Windows-lightgrey"></a>
 </p>
 
 
@@ -35,7 +35,7 @@ Tokens Statistic 是一个 [CLIProxyAPI](https://github.com/router-for-me/CLIPro
 
 **方法 2**：
 
-1. 从 [Releases](https://github.com/Pet-Max/cpa-plugin-tokens-statistic/releases) 下载对应平台的 zip 并解压，得到一个动态库文件。
+1. 从 [Releases](https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases) 下载对应平台的 zip 并解压，得到一个动态库文件。
 2. 将动态库文件放入 CLIProxyAPI 目录下的 `plugins/<系统>/<架构>/`。
 3. 在 CLIProxyAPI 的 config.yaml 中配置（`enabled` 必填，宿主默认不加载未显式启用的插件）：
 
@@ -43,7 +43,7 @@ Tokens Statistic 是一个 [CLIProxyAPI](https://github.com/router-for-me/CLIPro
 plugins:
   enabled: true
   configs:
-    tokens-statistic:
+    tokens-statistic-fix:
       enabled: true
       db: data/tokens-statistic.db   # 数据库路径，默认 <CLIProxyAPI 目录>/data/tokens-statistic.db
       retention: 365                 # 保留天数（1–3650），默认 365
@@ -63,6 +63,17 @@ plugins:
 | `secret` | `123456` | API Key 加密与指纹密钥，自定义须不少于 32 字节。公开部署必须修改；留空则完全禁用 API Key 追踪 |
 | `health_warn` / `health_crit` | `95` / `80` | 服务健康面板的成功率阈值：低于 health_warn 标黄（降级）、低于 health_crit 标红（异常）。均为 0–100 且 health_warn 必须大于 health_crit |
 
+### 从旧 ID 迁移
+
+此分支使用独立插件 ID `tokens-statistic-fix`，不再与商店中的 `tokens-statistic` 共用配置键和安装文件名。新版 ZIP 根目录中的动态库名称为 `tokens-statistic-fix-v<版本>.<扩展名>`。
+
+1. 停止 CLIProxyAPI，备份 `config.yaml` 和实际使用的数据库文件。
+2. 将旧 `plugins.configs.tokens-statistic` 下的 `db`、`secret`、`retention`、`flush` 和健康阈值复制到 `plugins.configs.tokens-statistic-fix`，保持 `db` 和 `secret` 原值。若旧条目是误解析产生的 `tokens-statistic-v0.3.10`，从该条目复制。不要复制旧 `store` 字段，新版应由自己的注册源写入。
+3. 将旧条目设为 `enabled: false`。手动部署时，放入新 ID 安装包中的动态库后启动宿主；商店部署时，先启动宿主，再通过更新后的注册表安装新 ID。不要让两个 ID 同时使用同一个数据库。
+4. 确认 `tokens-statistic-fix` 已注册，且历史统计、价格设置和 API Key 标签可读。默认数据库仍是 `data/tokens-statistic.db`，无需重命名。
+
+回滚时停止宿主，禁用 `tokens-statistic-fix`，恢复备份的旧配置并重新启用旧安装包。迁移期间保留旧文件和数据库；无需删除它们。
+
 ## 构建
 
 本地构建跑 `scripts/` 里的脚本（4 平台，产物留在本地 `dist/`，不进 git）。发布由仓库维护者操作：推送 `v*` 标签后 CI 构建 6 平台（含 macOS）并自动发布稳定版 Release。环境要求：Go 1.26+ 与 `CGO_ENABLED=1`，交叉编译推荐 [zig](https://zig.dev)（Windows 也可用 MinGW-w64，Linux arm64 也可用 aarch64-linux-gnu-gcc）。
@@ -73,7 +84,7 @@ plugins:
 | Linux arm64 | `bash scripts/build-linux-arm64.sh` |
 | Windows amd64 / arm64 | `powershell -ExecutionPolicy Bypass -File scripts/build_dll.ps1` |
 
-- 产物：输出到 `dist/release/v<版本>/`（`tokens-statistic_<版本>_<平台>.zip` + `checksums.txt`，与 CI Release 资产同规格）；版本可用 `VERSION` 覆盖。
+- 产物：输出到 `dist/release/v<版本>/`（`tokens-statistic-fix_<版本>_<平台>.zip` + `checksums.txt`，与 CI Release 资产同规格）；版本可用 `VERSION` 覆盖。
 - 测试：`gofmt -w *.go && go vet ./... && go test -count=1 ./...`；可选的浏览器回归测试需要 Node、Chrome/Edge 与 `npm ci` 安装的 playwright-core 并设置 `CHROME_PATH`，条件不满足时自动跳过。
 
 ## 隐私与安全

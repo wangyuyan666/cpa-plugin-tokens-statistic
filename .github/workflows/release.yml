@@ -18,7 +18,7 @@ on:
         default: false
 
 env:
-  PLUGIN_ID: tokens-statistic
+  PLUGIN_ID: tokens-statistic-fix
 
 jobs:
   prepare:

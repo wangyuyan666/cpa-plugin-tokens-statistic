@@ -3,9 +3,9 @@
 <p align="center"><a href="README.md">简体中文</a> | English</p>
 <p align="center">
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-blue"></a>
-  <a href="https://github.com/Pet-Max/cpa-plugin-tokens-statistic/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/Pet-Max/cpa-plugin-tokens-statistic?logo=github&label=Release"></a>
+  <a href="https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/wangyuyan666/cpa-plugin-tokens-statistic?logo=github&label=Release"></a>
   <a href="https://go.dev"><img alt="Go" src="https://img.shields.io/badge/Go-1.26%2B-00ADD8?logo=go&logoSize=auto&label=Language"></a>
-  <a href="https://github.com/Pet-Max/cpa-plugin-tokens-statistic/releases/latest"><img alt="Platform" src="https://img.shields.io/badge/Platform-Linux%20%7C%20MacOS%20%7C%20Windows-lightgrey"></a>
+  <a href="https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases/latest"><img alt="Platform" src="https://img.shields.io/badge/Platform-Linux%20%7C%20MacOS%20%7C%20Windows-lightgrey"></a>
 </p>
 
 Tokens Statistic is a usage-statistics plugin for [CLIProxyAPI](https://github.com/router-for-me/CLIProxyAPI). Once installed, the Management Center gains a "Tokens Statistic" page: every model call is recorded with its model, token counts, latency, outcome and cache hits, presented as trend charts and detail tables for any time range. All data stays in a local database — nothing is uploaded.
@@ -31,7 +31,7 @@ Tokens Statistic is a usage-statistics plugin for [CLIProxyAPI](https://github.c
 
 **Method 2**:
 
-1. Download the zip for your platform from [Releases](https://github.com/Pet-Max/cpa-plugin-tokens-statistic/releases) and extract the dynamic library.
+1. Download the zip for your platform from [Releases](https://github.com/wangyuyan666/cpa-plugin-tokens-statistic/releases) and extract the dynamic library.
 2. Place the library under `plugins/<os>/<arch>/` in your CLIProxyAPI directory.
 3. Configure it in CLIProxyAPI's config.yaml (`enabled` is required — the host does not load plugins that are not explicitly enabled):
 
@@ -39,7 +39,7 @@ Tokens Statistic is a usage-statistics plugin for [CLIProxyAPI](https://github.c
 plugins:
   enabled: true
   configs:
-    tokens-statistic:
+    tokens-statistic-fix:
       enabled: true
       db: data/tokens-statistic.db   # database path, default <CLIProxyAPI dir>/data/tokens-statistic.db
       retention: 365                 # days to keep aggregates and request details (1–3650), default 365
@@ -59,6 +59,17 @@ plugins:
 | `secret` | `123456` | API-key encryption and fingerprint key; custom values need at least 32 bytes. Must be changed for public deployments; empty disables API-key tracking |
 | `health_warn` / `health_crit` | `95` / `80` | Service-health success-rate thresholds: success rate below health_warn turns yellow (degraded), below health_crit turns red (error). Both 0–100 and health_warn must be greater than health_crit |
 
+### Migrating from the old ID
+
+This fork uses the independent plugin ID `tokens-statistic-fix`, with its own configuration key and installed filename instead of sharing `tokens-statistic` with the store entry. The dynamic library at the ZIP root is named `tokens-statistic-fix-v<version>.<extension>`.
+
+1. Stop CLIProxyAPI and back up `config.yaml` and the database file actually in use.
+2. Copy `db`, `secret`, `retention`, `flush`, and the health thresholds from `plugins.configs.tokens-statistic` to `plugins.configs.tokens-statistic-fix`, preserving the exact `db` and `secret` values. If the old entry was misidentified as `tokens-statistic-v0.3.10`, copy from that entry instead. Do not copy the old `store` field; install the new ID from its own registry source.
+3. Set the old entry to `enabled: false`. For manual deployment, place the new ID's dynamic library in the plugin directory before starting the host. For store deployment, start the host first, then install the new ID through the updated registry. Never enable both IDs against the same database.
+4. Confirm that `tokens-statistic-fix` is registered and historical statistics, pricing settings, and API-key labels remain readable. The default database is still `data/tokens-statistic.db`; do not rename it.
+
+To roll back, stop the host, disable `tokens-statistic-fix`, restore the backed-up configuration, and re-enable the old package. Keep the old files and database throughout migration; deleting them is unnecessary.
+
 ## Build
 
 Local builds run the scripts in `scripts/` (4 platforms, artifacts stay in local `dist/` and are never committed). Releases are published by the repository maintainer: pushing a `v*` tag builds 6 platforms (including macOS) and creates a stable Release automatically. Requirements: Go 1.26+ and `CGO_ENABLED=1`; [zig](https://zig.dev) is the recommended cross compiler (MinGW-w64 works for Windows, aarch64-linux-gnu-gcc for Linux arm64).
@@ -69,7 +80,7 @@ Local builds run the scripts in `scripts/` (4 platforms, artifacts stay in local
 | Linux arm64 | `bash scripts/build-linux-arm64.sh` |
 | Windows amd64 / arm64 | `powershell -ExecutionPolicy Bypass -File scripts/build_dll.ps1` |
 
-- Artifacts: written to `dist/release/v<version>/` (`tokens-statistic_<version>_<platform>.zip` + `checksums.txt`, matching the assets CI publishes on releases); override the version with `VERSION`.
+- Artifacts: written to `dist/release/v<version>/` (`tokens-statistic-fix_<version>_<platform>.zip` + `checksums.txt`, matching the assets CI publishes on releases); override the version with `VERSION`.
 - Tests: `gofmt -w *.go && go vet ./... && go test -count=1 ./...`; optional browser regression tests need Node, Chrome/Edge and playwright-core (`npm ci`), plus `CHROME_PATH` pointing at the browser; they skip automatically when any of these is missing.
 
 ## Privacy and Security

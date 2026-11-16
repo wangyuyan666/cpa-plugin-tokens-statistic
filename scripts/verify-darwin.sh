@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-ARTIFACT=${1:-"$ROOT_DIR/tokens-statistic.dylib"}
+ARTIFACT=${1:-"$ROOT_DIR/tokens-statistic-fix.dylib"}
 TARGET_ARCH=${2:-}
 
 if [[ -z "$TARGET_ARCH" || ( "$TARGET_ARCH" != "arm64" && "$TARGET_ARCH" != "amd64" ) ]]; then
@@ -49,7 +49,7 @@ done
 TEST_ROOT=$(mktemp -d "${TMPDIR:-/tmp}/cap-token-usage-darwin.XXXXXX")
 trap 'rm -rf -- "$TEST_ROOT"' EXIT
 INSTALL_DIR="$TEST_ROOT/CLIProxyAPI/plugins/darwin/$HOST_ARCH"
-INSTALLED_PLUGIN="$INSTALL_DIR/tokens-statistic.dylib"
+INSTALLED_PLUGIN="$INSTALL_DIR/tokens-statistic-fix.dylib"
 EXPECTED_DATABASE="$TEST_ROOT/CLIProxyAPI/data/tokens-statistic.db"
 SMOKE_BINARY="$TEST_ROOT/abi-smoke-darwin"
 

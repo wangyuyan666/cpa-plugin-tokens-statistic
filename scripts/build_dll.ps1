@@ -1,13 +1,14 @@
 $ErrorActionPreference = "Stop"
 
 $rootDir = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$version = if ($env:VERSION) { $env:VERSION } else { "v0.3.10" }
-# Store assets carry the version without the leading "v" (e.g. tokens-statistic_0.1.0_windows_amd64.zip).
+$version = if ($env:VERSION) { $env:VERSION } else { "v0.3.11" }
+$pluginID = if ($env:PLUGIN_ID) { $env:PLUGIN_ID } else { "tokens-statistic-fix" }
+# Store assets carry the version without the leading "v" (e.g. tokens-statistic-fix_0.3.11_windows_amd64.zip).
 $releaseVersion = $version.TrimStart("v")
 $releaseDir = Join-Path $rootDir "dist\release\$version"
 # Bare artifacts are staged in a temp dir and discarded after packaging;
 # only the store-conformant release packages land in dist/.
-$stage = Join-Path ([System.IO.Path]::GetTempPath()) ("tokens-statistic-build-" + [Guid]::NewGuid().ToString("N"))
+$stage = Join-Path ([System.IO.Path]::GetTempPath()) ("${pluginID}-build-" + [Guid]::NewGuid().ToString("N"))
 New-Item -ItemType Directory -Force $stage | Out-Null
 $env:GOOS = "windows"
 $env:CGO_ENABLED = "1"
@@ -48,7 +49,7 @@ function Package-Zip {
     # Python's zipfile keeps the entry at the zip root with forward slashes, exactly what the
     # CLIProxyAPI store installer requires (nested paths and multiple libraries are rejected).
     $code = "import sys, zipfile; z = zipfile.ZipFile(sys.argv[1], 'w', zipfile.ZIP_DEFLATED); z.write(sys.argv[2], sys.argv[3]); z.close()"
-    python -c $code $ZipPath $LibraryPath "tokens-statistic-$version.dll"
+    python -c $code $ZipPath $LibraryPath "${pluginID}-$version.dll"
 
     if ($LASTEXITCODE -ne 0) {
         throw "packaging failed for $ZipPath"
@@ -71,15 +72,15 @@ try {
     New-Item -ItemType Directory -Force -Path $releaseDir | Out-Null
     New-Item -ItemType Directory -Force -Path (Join-Path $rootDir "dist") | Out-Null
 
-    Build-WindowsDll -Arch "amd64" -OutputPath (Join-Path $stage "tokens-statistic.dll")
-    Package-Zip -ZipPath (Join-Path $releaseDir "tokens-statistic_${releaseVersion}_windows_amd64.zip") -LibraryPath (Join-Path $stage "tokens-statistic.dll")
-    Write-Host "release package: tokens-statistic_${releaseVersion}_windows_amd64.zip"
+    Build-WindowsDll -Arch "amd64" -OutputPath (Join-Path $stage "${pluginID}.dll")
+    Package-Zip -ZipPath (Join-Path $releaseDir "${pluginID}_${releaseVersion}_windows_amd64.zip") -LibraryPath (Join-Path $stage "${pluginID}.dll")
+    Write-Host "release package: ${pluginID}_${releaseVersion}_windows_amd64.zip"
 
     # Best effort: windows/arm64 via zig cc. Reported, not fatal, when the toolchain misbehaves.
     try {
-        Build-WindowsDll -Arch "arm64" -OutputPath (Join-Path $stage "tokens-statistic-windows-arm64.dll")
-        Package-Zip -ZipPath (Join-Path $releaseDir "tokens-statistic_${releaseVersion}_windows_arm64.zip") -LibraryPath (Join-Path $stage "tokens-statistic-windows-arm64.dll")
-        Write-Host "release package: tokens-statistic_${releaseVersion}_windows_arm64.zip"
+        Build-WindowsDll -Arch "arm64" -OutputPath (Join-Path $stage "${pluginID}-windows-arm64.dll")
+        Package-Zip -ZipPath (Join-Path $releaseDir "${pluginID}_${releaseVersion}_windows_arm64.zip") -LibraryPath (Join-Path $stage "${pluginID}-windows-arm64.dll")
+        Write-Host "release package: ${pluginID}_${releaseVersion}_windows_arm64.zip"
     }
     catch {
         Write-Warning "windows/arm64 build skipped: $($_.Exception.Message)"

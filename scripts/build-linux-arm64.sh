@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Build the Linux arm64 c-shared plugin (tokens-statistic) and the store release zip.
+# Build the Linux arm64 c-shared plugin (tokens-statistic-fix) and the store release zip.
 # Uses zig cc for cross-compiling when available, otherwise aarch64-linux-gnu-gcc.
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 DIST_DIR="$ROOT_DIR/dist"
-VERSION=${VERSION:-v0.3.10}
-PLUGIN_ID=${PLUGIN_ID:-tokens-statistic}
+VERSION=${VERSION:-v0.3.11}
+PLUGIN_ID=${PLUGIN_ID:-tokens-statistic-fix}
 # Bare artifacts are staged in a temp dir and discarded after packaging;
 # only the store-conformant release packages land in dist/.
 STAGE=""
@@ -49,7 +49,7 @@ go build \
   .
 printf 'Built release artifact: %s\n' "$RELEASE_ARTIFACT"
 
-# Package the store-conformant release zip: tokens-statistic_<version without v>_<goos>_<goarch>.zip
+# Package the store-conformant release zip: <id>_<version without v>_<goos>_<goarch>.zip
 # with the library at the zip root, plus a checksums.txt for every zip in the release dir.
 RELEASE_VERSION=${VERSION#v}
 RELEASE_DIR="$ROOT_DIR/dist/release/$VERSION"

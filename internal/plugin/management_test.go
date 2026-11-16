@@ -19,9 +19,11 @@ import (
 )
 
 func TestPluginIDFromResourceBase(t *testing.T) {
-	got, err := pluginIDFromResourceBase("/v0/resource/plugins/tokens-statistic")
-	if err != nil || got != "tokens-statistic" {
-		t.Fatalf("got %q, %v", got, err)
+	for _, id := range []string{"tokens-statistic", "tokens-statistic-fix"} {
+		got, err := pluginIDFromResourceBase("/v0/resource/plugins/" + id)
+		if err != nil || got != id {
+			t.Fatalf("got %q, %v, want %q", got, err, id)
+		}
 	}
 	for _, invalid := range []string{"/wrong/id", "/v0/resource/plugins/a/b", "/v0/resource/plugins/bad id"} {
 		if _, err := pluginIDFromResourceBase(invalid); err == nil {
@@ -32,31 +34,31 @@ func TestPluginIDFromResourceBase(t *testing.T) {
 
 func TestManagementRegistrationUsesDynamicPluginID(t *testing.T) {
 	runtime := &pluginRuntime{}
-	raw, _ := json.Marshal(pluginapi.ManagementRegistrationRequest{ResourceBasePath: "/v0/resource/plugins/custom-id"})
+	raw, _ := json.Marshal(pluginapi.ManagementRegistrationRequest{ResourceBasePath: "/v0/resource/plugins/tokens-statistic-fix"})
 	registration, err := runtime.registerManagement(raw)
 	if err != nil {
 		t.Fatal(err)
 	}
 	type routeKey struct{ method, path string }
 	want := []routeKey{
-		{http.MethodGet, "/plugins/custom-id/stats"},
-		{http.MethodGet, "/plugins/custom-id/stats/initial"},
-		{http.MethodGet, "/plugins/custom-id/stats/trends"},
-		{http.MethodGet, "/plugins/custom-id/stats/groups"},
-		{http.MethodGet, "/plugins/custom-id/stats/health"},
-		{http.MethodGet, "/plugins/custom-id/requests"},
-		{http.MethodGet, "/plugins/custom-id/costs"},
-		{http.MethodGet, "/plugins/custom-id/exchange-rate"},
-		{http.MethodGet, "/plugins/custom-id/prices"},
-		{http.MethodPut, "/plugins/custom-id/prices"},
-		{http.MethodPost, "/plugins/custom-id/prices/sync"},
-		{http.MethodGet, "/plugins/custom-id/preferences"},
-		{http.MethodPost, "/plugins/custom-id/preferences"},
-		{http.MethodGet, "/plugins/custom-id/api-key-info"},
-		{http.MethodPut, "/plugins/custom-id/api-key-labels"},
-		{http.MethodPost, "/plugins/custom-id/reset"},
-		{http.MethodGet, "/plugins/custom-id/backup"},
-		{http.MethodPost, "/plugins/custom-id/restore"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/stats"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/stats/initial"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/stats/trends"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/stats/groups"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/stats/health"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/requests"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/costs"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/exchange-rate"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/prices"},
+		{http.MethodPut, "/plugins/tokens-statistic-fix/prices"},
+		{http.MethodPost, "/plugins/tokens-statistic-fix/prices/sync"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/preferences"},
+		{http.MethodPost, "/plugins/tokens-statistic-fix/preferences"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/api-key-info"},
+		{http.MethodPut, "/plugins/tokens-statistic-fix/api-key-labels"},
+		{http.MethodPost, "/plugins/tokens-statistic-fix/reset"},
+		{http.MethodGet, "/plugins/tokens-statistic-fix/backup"},
+		{http.MethodPost, "/plugins/tokens-statistic-fix/restore"},
 	}
 	if len(registration.Routes) != len(want) {
 		t.Fatalf("route count = %d, want %d: %+v", len(registration.Routes), len(want), registration.Routes)

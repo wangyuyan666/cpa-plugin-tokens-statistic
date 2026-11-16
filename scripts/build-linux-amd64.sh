@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Build the Linux amd64 c-shared plugin (tokens-statistic).
+# Build the Linux amd64 c-shared plugin (tokens-statistic-fix).
 #
 # Defaults to zig cc for cross-compiling from macOS/Windows; set CC to
 # override (for example a native gcc when building on Linux).
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 DIST_DIR="$ROOT_DIR/dist"
-VERSION=${VERSION:-v0.3.10}
-PLUGIN_ID=${PLUGIN_ID:-tokens-statistic}
+VERSION=${VERSION:-v0.3.11}
+PLUGIN_ID=${PLUGIN_ID:-tokens-statistic-fix}
 
 export PATH="/usr/local/go/bin:$PATH"
 export GOPATH="${GOPATH:-/tmp/gopath}"
@@ -41,7 +41,7 @@ go build -buildmode=c-shared -trimpath -buildvcs=false \
   -o "$STAGE/${PLUGIN_ID}-${VERSION}.so" .
 echo "built (staging) $STAGE/${PLUGIN_ID}-${VERSION}.so"
 
-# Package the store-conformant release zip: tokens-statistic_<version without v>_<goos>_<goarch>.zip
+# Package the store-conformant release zip: <id>_<version without v>_<goos>_<goarch>.zip
 # with the library at the zip root, plus a checksums.txt for every zip in the release dir.
 RELEASE_VERSION=${VERSION#v}
 RELEASE_DIR="$ROOT_DIR/dist/release/$VERSION"
