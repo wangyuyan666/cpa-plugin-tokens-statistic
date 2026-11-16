@@ -18,7 +18,7 @@ import (
 
 // version is set at build time with:
 // -X github.com/Pet-Max/cpa-plugin-tokens-statistic/internal/plugin.version=<version>
-var version = "0.3.10"
+var version = "0.3.11"
 
 // maxSupportedRPCSchema is intentionally independent from the SDK's latest
 // schema. Future hosts may negotiate down to this verified contract without
@@ -260,7 +260,7 @@ func pluginRegistration(schemaVersion uint32) registration {
 			Name:             "Tokens Statistic",
 			Version:          version,
 			Author:           "Pet-Max",
-			GitHubRepository: "https://github.com/Pet-Max/cpa-plugin-tokens-statistic",
+			GitHubRepository: "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic",
 			Logo:             pluginLogo,
 			ConfigFields: []pluginapi.ConfigField{
 				{Name: "db", Type: pluginapi.ConfigFieldTypeString, Description: "bbolt 数据库文件的存放路径。留空时自动使用插件目录旁的数据目录（文件名 tokens-statistic.db）；若手动填写相对路径，则相对于 CLIProxyAPI 的工作目录解析。一般保持留空即可。"},

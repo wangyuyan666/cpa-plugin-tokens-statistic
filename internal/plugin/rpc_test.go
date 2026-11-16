@@ -65,7 +65,10 @@ func TestRPCNegotiatesHostSchemaAndShutdown(t *testing.T) {
 				if registered.SchemaVersion != test.wantSchema || !registered.Capabilities.UsagePlugin || !registered.Capabilities.ManagementAPI {
 					t.Fatalf("unexpected %s registration: %+v", method, registered)
 				}
-				if registered.Metadata.GitHubRepository != "https://github.com/Pet-Max/cpa-plugin-tokens-statistic" || registered.Metadata.Author != "Pet-Max" || registered.Metadata.Version != version || !strings.HasPrefix(registered.Metadata.Logo, "data:image/svg+xml;base64,") {
+				if registered.Metadata.GitHubRepository != "https://github.com/wangyuyan666/cpa-plugin-tokens-statistic" {
+					t.Fatalf("unexpected update repository for %s: %q", method, registered.Metadata.GitHubRepository)
+				}
+				if registered.Metadata.Author != "Pet-Max" || registered.Metadata.Version != version || !strings.HasPrefix(registered.Metadata.Logo, "data:image/svg+xml;base64,") {
 					t.Fatalf("unexpected metadata: %+v", registered.Metadata)
 				}
 			}
